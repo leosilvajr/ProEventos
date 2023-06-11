@@ -6,18 +6,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import { NavComponent } from './nav/nav.component';
+
+import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Collapse
 
 @NgModule({
   declarations: [
     AppComponent,
     EventosComponent,
-    PalestrantesComponent
-  ],
+    PalestrantesComponent,
+    NavComponent,
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule, //Rotas
     HttpClientModule, //Possibilidade de usar no component a referencia
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CollapseModule.forRoot() //Usando o Collapse Importado
   ],
   providers: [],
   bootstrap: [AppComponent]
