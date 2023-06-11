@@ -1,0 +1,10 @@
+<h1>Eventos do Components</h1>
+
+<!-- Chamando o Evento.tema do OnInit da clase eventos.component.ts -->
+
+<!-- Uma especie de foreach que faz a leitura de todos os eventos dentro do objeto em eventos.componet.ts -->
+<div *ngFor="let evento of eventos">
+  <p> <b>Tema:</b> {{evento.tema}}</p>
+  <p> <b>Local:</b> {{evento.local}}</p>
+  <hr>
+</div>
