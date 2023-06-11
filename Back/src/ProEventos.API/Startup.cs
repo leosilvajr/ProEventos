@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ProEventos.API.Data;
 
 namespace ProEventos.API
 {
@@ -18,6 +20,7 @@ namespace ProEventos.API
     {
         public Startup(IConfiguration configuration)
         {
+            //Acessa o appsettings.json
             Configuration = configuration;
         }
 
@@ -26,6 +29,11 @@ namespace ProEventos.API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            //Service, oque contexto que voce está ultilizando é o meu DbContext que possui o meu Evento
+            services.AddDbContext<DataContext>(
+                
+                context => context.UseSqlite(Configuration.GetConnectionString("Default"))
+            );
             services.AddControllers(); //Trabalhando com arquitetura MVC
             services.AddSwaggerGen(c =>
             {
