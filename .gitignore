@@ -357,6 +357,9 @@ MigrationBackup/
 ## Visual studio for Mac
 ##
 
+# Cache
+**/*.pack
+**/*.old
 
 # globs
 Makefile.in
