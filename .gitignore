@@ -360,6 +360,8 @@ MigrationBackup/
 # Cache
 **/*.pack
 **/*.old
+**/.angular/
+
 
 # globs
 Makefile.in

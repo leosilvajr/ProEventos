@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
@@ -22,7 +24,9 @@ import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Col
     AppRoutingModule, //Rotas
     HttpClientModule, //Possibilidade de usar no component a referencia
     BrowserAnimationsModule,
-    CollapseModule.forRoot() //Usando o Collapse Importado
+    CollapseModule.forRoot(), //Usando o Collapse Importado
+    FormsModule, //Importado para usar a busca.
+
   ],
   providers: [],
   bootstrap: [AppComponent]
