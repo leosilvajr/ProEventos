@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ProEventos.API.Data;
+using ProEventos.Persistence;
 
 namespace ProEventos.API
 {
@@ -30,7 +30,7 @@ namespace ProEventos.API
         {
 
             //Service, oque contexto que voce está ultilizando é o meu DbContext que possui o meu Evento
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<ProEventosContext>(
                 
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
