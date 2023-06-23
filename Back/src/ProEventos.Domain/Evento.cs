@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+//VS
 
 namespace ProEventos.Domain
 {
@@ -11,15 +12,10 @@ namespace ProEventos.Domain
         public string Tema { get; set; }
         public int QtdPessoas { get; set; }
         public string ImagemURL { get; set; }
-
         public string Telefone { get; set; }
         public string Email { get; set; }
-        
-        //Um Evento possui diversos Lotes
         public IEnumerable<Lote> Lotes { get; set; }
         public IEnumerable<RedeSocial> RedesSociais { get; set; }
-
-
         public IEnumerable<PalestranteEvento> PalestrantesEventos { get; set; }
     }
 }

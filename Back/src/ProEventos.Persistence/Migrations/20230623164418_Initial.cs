@@ -100,7 +100,7 @@ namespace ProEventos.Persistence.Migrations
                     Nome = table.Column<string>(type: "TEXT", nullable: true),
                     URL = table.Column<string>(type: "TEXT", nullable: true),
                     EventoId = table.Column<int>(type: "INTEGER", nullable: true),
-                    PalestranteId = table.Column<int>(type: "INTEGER", nullable: false)
+                    PalestranteId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -110,7 +110,7 @@ namespace ProEventos.Persistence.Migrations
                         column: x => x.EventoId,
                         principalTable: "Eventos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RedesSociais_Palestrantes_PalestranteId",
                         column: x => x.PalestranteId,
