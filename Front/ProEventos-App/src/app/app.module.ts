@@ -1,16 +1,20 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Collapse
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
 
-import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Collapse
+import { EventoService } from './services/evento.service';
+
+import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +22,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Col
     EventosComponent,
     PalestrantesComponent,
     NavComponent,
+    DateTimeFormatPipe //Adicionado o DateFormatPipe do helpers
    ],
   imports: [
     BrowserModule,
@@ -28,7 +33,9 @@ import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Col
     FormsModule, //Importado para usar a busca.
 
   ],
-  providers: [],
+  providers: [
+    EventoService //Injeção de Dependencia
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

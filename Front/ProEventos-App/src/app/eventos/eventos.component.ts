@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { EventoService } from '../services/evento.service';
+import { Evento } from '../models/Evento';
 
 @Component({
   selector: 'app-eventos',
@@ -9,28 +10,28 @@ import { Component, OnInit } from '@angular/core';
 export class EventosComponent implements OnInit{
 
   //Usar dentro do HTML usando <p>{{evento.Tema}}</p>
-  public eventos: any = []; //Possui Espaços
-  public eventosFiltrados: any = [];
+  public eventos: Evento[] = []; //Possui Espaços
+  public eventosFiltrados: Evento[] = [];
 
   //Propriedade Binding
-  larguraImagem: number = 50;
-  margemImagem: number = 2;
-  exibirImagem: boolean = true;
+  public larguraImagem = 50;
+  public margemImagem = 2;
+  public exibirImagem = true;
 
-  private _filtroLista: string = '';
+  private filtroListado = ''; //Variaveis tem que ser lowercase
 
   public get filtroLista(): string{
-    return this._filtroLista;
+    return this.filtroListado;
   }
 
   //Atribuindo valor para a variavel _filtroLista
   public set filtroLista(value: string){
-    this._filtroLista = value;
-    this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this._filtroLista) : this.eventos;
+    this.filtroListado = value;
+    this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
   }
 
   //Filtro que vai pra dentro do input de busca
-  filtrarEventos(filtrarPor: string): any {
+  public filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
       (evento: {tema: string; local: string}) =>
@@ -42,34 +43,25 @@ export class EventosComponent implements OnInit{
 
 
     //Injetando o HttpClient no contrutorpara usar em getEventos
-  constructor(private http: HttpClient){}
+  constructor(private eventoService : EventoService){}
 
   //Metodo chamado antes de inicializar a aplicação
-  ngOnInit():void{
+  public ngOnInit():void{
     this.getEventos();
   }
-
-  alterarImagem(){ //Toda vez que executar essa ação, atribui para alterarImagem o oposto.
+                          //void porque nao retorna nada
+  public alterarImagem() : void{ //Toda vez que executar essa ação, atribui para alterarImagem o oposto.
     this.exibirImagem = !this.exibirImagem;
   }
 
   public getEventos(): void {
-
-    // Função pública chamada getEventos, sem retorno (void). Responsável por buscar os eventos.
-    this.http.get('https://localhost:5001/api/eventos').subscribe(
-      // Faz uma requisição HTTP GET para o endereço 'https://localhost:5001/api/eventos'.
-      // O método "subscribe" permite observar a resposta da requisição.
-
-      response => {
-        this.eventos = response,
+    this.eventoService.getEventos().subscribe({
+      next: (eventos: Evento[]) => {
+        this.eventos = eventos,
         this.eventosFiltrados = this.eventos
       },
-      // Quando a resposta da requisição for recebida com sucesso, essa função será executada.
-      // Aqui, atribuímos a resposta (que contém os eventos) à variável "eventos" do objeto atual.
-
-      error => console.log(error),
-    );
-
+      error: (error: any) => console.log(error)
+    });
   }
 }
 

@@ -487,9 +487,9 @@ testem.log
 Thumbs.db
 
 #Excluindo DB
-*.db
-*.db-shm
-*.db-wal
+# *.db
+# *.db-shm
+# *.db-wal
 
 #Excluindo Imagens
 *.png
