@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { EventoService } from '../services/evento.service';
 import { Evento } from '../models/Evento';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-eventos',
@@ -9,6 +10,7 @@ import { Evento } from '../models/Evento';
 })
 export class EventosComponent implements OnInit{
 
+  modalRef!: BsModalRef;
   //Usar dentro do HTML usando <p>{{evento.Tema}}</p>
   public eventos: Evento[] = []; //Possui Espaços
   public eventosFiltrados: Evento[] = [];
@@ -43,7 +45,10 @@ export class EventosComponent implements OnInit{
 
 
     //Injetando o HttpClient no contrutorpara usar em getEventos
-  constructor(private eventoService : EventoService){}
+  constructor(
+    private eventoService : EventoService,
+    private modalService: BsModalService
+    ){}
 
   //Metodo chamado antes de inicializar a aplicação
   public ngOnInit():void{
@@ -62,6 +67,18 @@ export class EventosComponent implements OnInit{
       },
       error: (error: any) => console.log(error)
     });
+  }
+
+  openModal(template: TemplateRef<any>) { //Componente do Modal
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  confirm(): void {//Componente do Modal
+    this.modalRef.hide();
+  }
+
+  decline(): void {//Componente do Modal
+    this.modalRef.hide();
   }
 }
 

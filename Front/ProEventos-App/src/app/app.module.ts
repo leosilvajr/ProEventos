@@ -2,7 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
+
 import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Collapse
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,11 +30,14 @@ import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
    ],
   imports: [
     BrowserModule,
+    FormsModule, //Importado para usar a busca.
     AppRoutingModule, //Rotas
     HttpClientModule, //Possibilidade de usar no component a referencia
     BrowserAnimationsModule,
     CollapseModule.forRoot(), //Usando o Collapse Importado
-    FormsModule, //Importado para usar a busca.
+    TooltipModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot()
 
   ],
   providers: [
