@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
 
@@ -7,6 +7,9 @@ import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Col
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
+
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,12 +40,22 @@ import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
     CollapseModule.forRoot(), //Usando o Collapse Importado
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+
+    ToastrModule.forRoot({
+    timeOut: 3000,
+    positionClass: 'toast-bottom-right',
+    preventDuplicates: true,
+    progressBar: true,
+    progressAnimation: 'increasing'
+  }),
+  NgxSpinnerModule
 
   ],
   providers: [
     EventoService //Injeção de Dependencia
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }
