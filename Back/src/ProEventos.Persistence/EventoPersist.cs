@@ -60,7 +60,7 @@ namespace ProEventos.Persistence
                 .Include(e => e.Lotes)
                 .Include(e => e.RedesSociais);
 
-            if (includePalestrantes)
+            if (includePalestrantes) //Se eu estiver retornando true, ele retorna os paletrantes tbm
             {
                 query = query
                     .Include(e => e.PalestrantesEventos)
