@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Collapse
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -53,6 +53,7 @@ import { RegistrationComponent } from './components/user/registration/registrati
   imports: [
     BrowserModule,
     FormsModule, //Importado para usar a busca.
+    ReactiveFormsModule,
     AppRoutingModule, //Rotas
     HttpClientModule, //Possibilidade de usar no component a referencia
     BrowserAnimationsModule,
