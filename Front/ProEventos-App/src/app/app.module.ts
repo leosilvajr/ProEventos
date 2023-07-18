@@ -7,6 +7,9 @@ import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Col
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'; //Componente Data
 
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -32,7 +35,7 @@ import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 
-
+defineLocale('pt-br', ptBrLocale);
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,6 +60,7 @@ import { RegistrationComponent } from './components/user/registration/registrati
     AppRoutingModule, //Rotas
     HttpClientModule, //Possibilidade de usar no component a referencia
     BrowserAnimationsModule,
+    BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(), //Usando o Collapse Importado
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
