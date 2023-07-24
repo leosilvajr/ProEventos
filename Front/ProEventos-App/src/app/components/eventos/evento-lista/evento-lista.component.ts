@@ -31,6 +31,9 @@ export class EventoListaComponent implements OnInit {
 
   private filtroListado = ''; //Variaveis tem que ser lowercase
 
+  public eventoId = 0;
+  public eventoTema = "";
+
   public get filtroLista(): string{
     return this.filtroListado;
   }
@@ -50,9 +53,6 @@ export class EventoListaComponent implements OnInit {
       evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
     );
   }
-
-
-
     //Injetando o HttpClient no contrutorpara usar em getEventos
   constructor(
     private eventoService : EventoService,
@@ -62,17 +62,19 @@ export class EventoListaComponent implements OnInit {
     private router : Router
     ){}
 
+
   //Metodo chamado antes de inicializar a aplicação
   public ngOnInit(): void {
     this.spinner.show();
-    this.getEventos();
+    this.carregarEventos();
   }
+
                           //void porque nao retorna nada
   public alterarImagem() : void{ //Toda vez que executar essa ação, atribui para alterarImagem o oposto.
     this.exibirImagem = !this.exibirImagem;
   }
 
-  public getEventos(): void {
+  public carregarEventos(): void {
     this.eventoService.getEventos().subscribe({
       next: (eventos: Evento[]) => {
         this.eventos = eventos,
@@ -86,13 +88,29 @@ export class EventoListaComponent implements OnInit {
     });
   }
 
-  openModal(template: TemplateRef<any>) { //Componente do Modal
+  openModal(event: any, template: TemplateRef<any>, eventoId : number, eventoTema: string) { //Componente do Modal
+    event.stopPropagation();
+    this.eventoId = eventoId;
+    this.eventoTema = eventoTema;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
 
   confirm(): void {//Componente do Modal
     this.modalRef.hide();
-    this.toastr.success('O Evento foi deletado com Sucesso.', 'Deletado !')
+    this.spinner.show();
+    
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (result : any) => {
+        console.log(result)
+          this.toastr.success('O Evento foi deletado com Sucesso.', 'Deletado !');       
+          this.carregarEventos();       
+      },
+      (error: any) => {
+        console.error(error)
+        this.toastr.error(`Erro ao tentar deletar o Evento ${this.eventoId}.`, 'Erro');
+      }
+    ).add( () => this.spinner.hide());
+
   }
 
   decline(): void {//Componente do Modal
@@ -103,3 +121,6 @@ export class EventoListaComponent implements OnInit {
     this.router.navigate ([`eventos/detalhe/${id}`]);
   }
 }
+
+  
+

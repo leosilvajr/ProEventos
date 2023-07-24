@@ -11,7 +11,6 @@ export class NavComponent implements OnInit {
   constructor(private router : Router){}
 
   ngOnInit(){
-
   }
 
   showMenu(): boolean {

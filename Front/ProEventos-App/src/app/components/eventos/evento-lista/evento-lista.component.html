@@ -63,7 +63,7 @@
             <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar">
               <i class="fa fa-edit"></i>
             </button>
-            <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
+            <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal($event, template, evento.id, evento.tema)">
               <i class="fa fa-trash"></i>
             </button>
           </div>
@@ -83,7 +83,7 @@
   <!-- Adicionando um Modal -->
   <ng-template #template>
     <div class="modal-body text-center">
-      <p>Tem certeza que quer deletar este Evento ?</p>
+      <p>Tem certeza que quer deletar o Evento {{this.eventoId}} - {{this.eventoTema}} ?</p>
       <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
       <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
     </div>
