@@ -50,8 +50,11 @@ namespace ProEventos.API
             //Injeção de Dependencia
             //Toda vez que for requisitado o IEventoService injete o EventoService
             services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<ILoteService, LoteService>();
+
             services.AddScoped<IGeralPersist, GeralPersist>();
             services.AddScoped<IEventoPersist, EventoPersist>();
+            services.AddScoped<ILotePersist, LotePersist>();
 
             //Habilitando o CORS
             services.AddCors();
