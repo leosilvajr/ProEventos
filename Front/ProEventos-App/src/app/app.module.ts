@@ -10,6 +10,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'; //Componente Data
+import { NgxCurrencyDirective } from "ngx-currency";
 
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -66,16 +67,15 @@ defineLocale('pt-br', ptBrLocale);
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
-
     ToastrModule.forRoot({
-    timeOut: 3000,
-    positionClass: 'toast-bottom-right',
-    preventDuplicates: true,
-    progressBar: true,
-    progressAnimation: 'increasing'
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      progressBar: true,
+      progressAnimation: 'increasing'
   }),
-  NgxSpinnerModule
-
+  NgxSpinnerModule,
+  NgxCurrencyDirective
   ],
   providers: [
     EventoService, //Injeção de Dependencia
