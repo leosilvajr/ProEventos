@@ -5,6 +5,9 @@ using ProEventos.Domain;
 using ProEventos.Application.Contratos;
 using Microsoft.AspNetCore.Http;
 using ProEventos.Application.Dtos;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Linq;
 //VS
 namespace ProEventos.API.Controllers
 {
@@ -13,10 +16,14 @@ namespace ProEventos.API.Controllers
     public class EventosController : ControllerBase
     {
         private readonly IEventoService _eventoService;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EventosController(IEventoService eventoService)
+        public EventosController(
+            IEventoService eventoService,
+            IWebHostEnvironment hostEnvironment)
         {
             _eventoService = eventoService;
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
@@ -70,6 +77,39 @@ namespace ProEventos.API.Controllers
             }
         }
 
+
+        [HttpPost("upload-image/{eventoId}")]
+        public async Task<IActionResult> UploadImage(int eventoId)
+        {
+            try
+            {
+                var evento = await _eventoService.GetEventoByIdAsync(eventoId, true);
+
+                if (evento == null) //Verificando se o evento exite
+                    return NoContent();
+                
+                var file = Request.Form.Files[0]; // Recebe do meu request vai enviar um formulario com files.
+
+                if(file.Length > 0)
+                {
+                    //Deletar Imagem
+                    DeleteImage(evento.ImagemURL);
+
+                    //Salvar Imagem
+                    evento.ImagemURL = await SaveImage(file);
+
+                }
+
+                var eventoRetorno = await _eventoService.UpdateEvento(eventoId, evento);
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(EventoDto model)
         {
@@ -120,6 +160,36 @@ namespace ProEventos.API.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
                     $"Erro ao tentar deletar eventos. Erro: {ex.Message}");
+            }
+        }
+
+        [NonAction] //Nao sera um EndPoint
+        public async Task<string> SaveImage(IFormFile imageFile)
+        {
+            //Pegar o imageName
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
+                .Take(10)
+                .ToArray()).Replace(' ', '-'); //Se tiver espaço em branco, substitua por traço
+
+            imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}";
+            
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resourses/images", imageName);
+
+            using(var filesStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(filesStream);
+            }
+
+            return  imageName;
+        }
+
+        [NonAction] //Nao sera um EndPoint
+        public void DeleteImage(string imageName)
+        {                                   //Raiz Atual do meu caminho
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resourses/images", imageName);
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
             }
         }
     }
