@@ -1,5 +1,4 @@
 <div class="card rounded shadow-sm p-3">
-  
     <div class="d-flex">
       <div class="flex-fill pr-3">
         <div class="input-group mb-2">
@@ -57,7 +56,8 @@
         <td class="d-none d-md-table-cell">{{evento.local}}</td>
         <td>{{evento.dataEvento}}</td>
         <td class="d-none d-md-table-cell">{{evento.qtdPessoas}}</td>
-        <td class="d-none d-md-table-cell">{{evento.lotes[0].nome | uppercase}}</td>
+        <td class="d-none d-md-table-cell">{{ evento.lotes[0].nome ? (evento.lotes[0].nome | uppercase) : ' ' }}</td>
+        
         <td>
           <div class="btn-group">
             <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar">
