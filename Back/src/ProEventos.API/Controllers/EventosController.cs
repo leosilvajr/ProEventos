@@ -85,7 +85,7 @@ namespace ProEventos.API.Controllers
             {
                 var evento = await _eventoService.GetEventoByIdAsync(eventoId, true);
 
-                if (evento == null) //Verificando se o evento exite
+                if (evento == null) //Verificando se o evento exite.
                     return NoContent();
                 
                 var file = Request.Form.Files[0]; // Recebe do meu request vai enviar um formulario com files.
