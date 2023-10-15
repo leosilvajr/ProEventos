@@ -31,7 +31,8 @@ import { AbstractControl,
     evento = {} as Evento;
     form: FormGroup;
     estadoSalvar = 'post';
-    loteAtual = {id: 0, nome: '', indice: 0}; //Lote atual é id a igual a 0, nome vazio e indice 0    
+    loteAtual = {id: 0, nome: '', indice: 0}; //Lote atual é id a igual a 0, nome vazio e indice 0 
+    imagemURL = 'assets/img/upload.png'   
     
     get modoEditar(): boolean {
       return this.estadoSalvar == 'put';
