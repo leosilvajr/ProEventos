@@ -173,7 +173,7 @@ namespace ProEventos.API.Controllers
 
             imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}";
             
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resourses/images", imageName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageName);
 
             using(var filesStream = new FileStream(imagePath, FileMode.Create))
             {
@@ -186,7 +186,7 @@ namespace ProEventos.API.Controllers
         [NonAction] //Nao sera um EndPoint
         public void DeleteImage(string imageName)
         {                                   //Raiz Atual do meu caminho
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resourses/images", imageName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageName);
             if (System.IO.File.Exists(imagePath))
             {
                 System.IO.File.Delete(imagePath);

@@ -12,7 +12,8 @@ import { EventoService } from '@app/services/evento.service';
 import { Evento } from '@app/models/Evento';
 import { Lote } from '@app/models/Lote';
 import { DatePipe } from '@angular/common';
-  
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-evento-detalhe',
   templateUrl: './evento-detalhe.component.html',
@@ -79,10 +80,13 @@ public carregarEvento(): void {
       (evento: Evento) => {
         this.evento = { ...evento };
         this.form.patchValue(this.evento);
-        //this.carregarLotes();
-        this.evento.lotes.forEach( lote => {
-          this.lotes.push(this.criarLote(lote));
-        });
+        if (this.evento.imagemURL != '') {
+          this.imagemURL = environment.apiURL + 'resources/images/' + this.evento.imagemURL; //'https://localhost:44338'
+        }
+        this.carregarLotes();
+        // this.evento.lotes.forEach( lote => {
+        //   this.lotes.push(this.criarLote(lote));
+        // });
       },
       (error: any) => {
         this.toastr.error('Erro ao tentar carregar evento.', 'Erro !')
@@ -124,7 +128,7 @@ public validation(): void{
     qtdPessoas: ['',[Validators.required, Validators.max(120000)]],         
     telefone: ['', Validators.required],       
     email: ['',[Validators.required, Validators.email]],         
-    imagemURL: ['', Validators.required],
+    imagemURL: [''],
     
     //Lotes: Array de varios lotes
     lotes: this.fb.array([]) //adicionando lote em um array    
@@ -205,49 +209,77 @@ public salvarLotes(): void{
     }
 }
     
-public removerLote(template:TemplateRef<any>,
-                    indice: number): void{
+  public removerLote(template:TemplateRef<any>,
+                      indice: number): void{
 
-  //Passando os parametros para a variavel loteAtual                    
-  this.loteAtual.id = this.lotes.get(indice + '.id').value;              
-  this.loteAtual.nome = this.lotes.get(indice + '.nome').value;   
-  this.loteAtual.indice = indice;            
+    //Passando os parametros para a variavel loteAtual                    
+    this.loteAtual.id = this.lotes.get(indice + '.id').value;              
+    this.loteAtual.nome = this.lotes.get(indice + '.nome').value;   
+    this.loteAtual.indice = indice;            
 
 
-  this.modalRef = this.modalService.show(template, {class:'modal-sm'  });
-  //this.lotes.removeAt(indice);
-}
+    this.modalRef = this.modalService.show(template, {class:'modal-sm'  });
+    //this.lotes.removeAt(indice);
+  }
 
-public confirmDeleteLote():void{
-  this.modalRef.hide();
-  this.spinner.show();
+  public confirmDeleteLote():void{
+    this.modalRef.hide();
+    this.spinner.show();
 
-  this.loteService.deleteLote(this.eventoId, this.loteAtual.id)
-    .subscribe(
+    this.loteService.deleteLote(this.eventoId, this.loteAtual.id)
+      .subscribe(
+        () => {
+          this.toastr.success('Lote deletado com sucesso.', 'Sucesso 1');
+          this.lotes.removeAt(this.loteAtual.indice);
+        },
+        (error: any) => {
+          this.toastr.error(`Erro ao tentar deletar o Lote: ${this.loteAtual.id}`, 'Erro !');
+          console.error(error);
+        }
+      ).add(() => this.spinner.hide())
+  }
+
+  public declineDeleteLote():void{
+    this.modalRef.hide();
+  }
+
+  onFileChange(ev: any): void{
+    const reader = new FileReader();
+
+
+    reader.onload = (event: any) => this.imagemURL = event.target.result;
+
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImagem();
+  }
+
+  uploadImagem(): void {
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
       () => {
-        this.toastr.success('Lote deletado com sucesso.', 'Sucesso 1');
-        this.lotes.removeAt(this.loteAtual.indice);
+        this.carregarEvento();
+        this.toastr.success('Imagem atualizada com Sucesso', 'Sucesso!');
       },
       (error: any) => {
-        this.toastr.error(`Erro ao tentar deletar o Lote: ${this.loteAtual.id}`, 'Erro !');
-        console.error(error);
+        this.toastr.error('Erro ao fazer upload de imagem', 'Erro!');
+        console.log(error);
       }
-    ).add(() => this.spinner.hide())
-}
-
-public declineDeleteLote():void{
-  this.modalRef.hide();
-}
-
-onFileChange(ev: any): void{
-  const reader = new FileReader();
-
-
-  reader.onload = (event: any) => this.imagemURL = event.target.result;
-
-  this.file = ev.target.files;
-  reader.readAsDataURL(this.file[0]); //
-}
-
+    ).add(() => this.spinner.hide());
   }
+  // uploadImagem(): void{
+  //   this.spinner.show();
+  //   this.eventoService.postUpload(this.eventoId, this.file).subscribe(
+  //     () => {
+  //       this.carregarEvento();
+  //       this.toastr.success('Imagem atualizada com Sucesso.', 'Sucesso!')
+  //     },
+  //     (error: any) => {
+  //       this.toastr.error('Erro ao fazer upload de imagem', 'Erro!');
+  //       console.error(error);
+  //     }
+  //   ).add(() => this.spinner.hide());
+  // }
+}
   
