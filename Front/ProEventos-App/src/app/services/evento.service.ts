@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, take } from 'rxjs'; //Observable
 import { Evento } from '../models/Evento';
 import { Constants } from '@app/util/constants';
+import { environment } from '@environments/environment';
 
 
 //Injeção de Dependencia do Angular: Exitem 3 maneiras
@@ -16,7 +17,7 @@ import { Constants } from '@app/util/constants';
 
 
 export class EventoService {
-  baseURL = Constants.URL_ENDPOINT+'api/eventos';
+  baseURL = environment.apiURL+'api/eventos';
   constructor(private http: HttpClient) { }
 
 public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array de Eventos
@@ -55,5 +56,23 @@ public deleteEvento(id : number): Observable<any> {
   .pipe(take(1));
 }
 
+postUpload(eventoId: number, file: any): Observable<Evento> {
+  const fileToUpload = file[0] as File;
+  const formData = new FormData();
+  formData.append('file', fileToUpload);
+
+  return this.http
+    .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData)
+    .pipe(take(1));
+}
+
+// postUpload(eventoId: number, file: File): Observable<Evento>{
+//   const fileToUpload = file[0] as File;
+//   const formData = new FormData();
+//   formData.append('file', fileToUpload);
+//   return this.http
+//     .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData)
+//     .pipe(take(1));
+// }
 
 }
