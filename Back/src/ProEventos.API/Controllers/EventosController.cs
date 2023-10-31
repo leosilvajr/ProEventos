@@ -200,6 +200,5 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        //Aula de Comentario
     }
 }
