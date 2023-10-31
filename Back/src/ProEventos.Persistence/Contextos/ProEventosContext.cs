@@ -20,8 +20,28 @@ namespace ProEventos.Persistence.Contextos
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<UserRole>(userRole => // Dado um UserRole
+            {
+                userRole.HasKey(ur => new { ur.UserId, ur.RoleId }); //Só consegueguimos acessar UserId e RoleId por conta do TKey da Herança de IdentityUser
+
+                //Uma UserRole possui um Role com muitas UserRoles e que possui uma ForeignKe de RoleId
+                userRole.HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired(); //Obrigatorio.
+
+                //Toda vez que eu criar um User dentro de Roles eu preciso passar o UserId
+                userRole.HasOne(ur => ur.User)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
+            });   
+
+
             modelBuilder.Entity<PalestranteEvento>()
-                .HasKey(PE => new { PE.EventoId, PE.PalestranteId });
+                .HasKey(pe => new { pe.EventoId, pe.PalestranteId });
 
             modelBuilder.Entity<Evento>()
                 .HasMany(e => e.RedesSociais)
