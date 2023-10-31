@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ProEventos.Application;
 using ProEventos.Application.Contratos;
+using ProEventos.Domain.Identity;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Contextos;
 using ProEventos.Persistence.Contratos;
@@ -41,9 +44,29 @@ namespace ProEventos.API
                 
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
+
+            services.AddIdentityCore<UserPersist>(option =>
+            {
+                option.Password.RequireDigit = false;
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequireLowercase = false;
+                option.Password.RequireUppercase = false;
+                option.Password.RequiredLength = 4;
+
+            })
+            .AddRoles<Role>()
+            .AddRoleManager<RoleManager<Role>>()
+            .AddSignInManager<SignInManager<User>>()
+            .AddRoleValidator<RoleValidator<User>>()
+            .AddEntityFrameworkStores<ProEventosContext>()
+            .AddDefaultTokenProviders(); //Sem esse AddDefaultTokenProviders algumas funcções do Token do AccountService não funcionará.
+
+
+
             services.AddControllers() //Trabalhando com arquitetura MVC
-                    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
-                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+                    .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore //Evitar looping infinito entre os objetos.
                     );
 
             //AutoMapper - Injeção do Objeto
@@ -52,12 +75,17 @@ namespace ProEventos.API
 
             //Injeção de Dependencia
             //Toda vez que for requisitado o IEventoService injete o EventoService
-            services.AddScoped<IEventoService, EventoService>();
-            services.AddScoped<ILoteService, LoteService>();
+            services.AddScoped<IEventoService,  EventoService>();
+            services.AddScoped<ILoteService,    LoteService>();
+            services.AddScoped<ITokenService,   TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
 
-            services.AddScoped<IGeralPersist, GeralPersist>();
+            services.AddScoped<IGeralPersist,  GeralPersist>();
             services.AddScoped<IEventoPersist, EventoPersist>();
-            services.AddScoped<ILotePersist, LotePersist>();
+            services.AddScoped<ILotePersist,   LotePersist>();
+
+            services.AddScoped<IUserPersist, UserPersist>();          
+
 
             //Habilitando o CORS
             services.AddCors();

@@ -20,11 +20,9 @@ namespace ProEventos.Application
         private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        public readonly SymmetricSecurityKey _key
-;
-        public TokenService(IConfiguration config,
-                            UserManager<User> userManager,
-                            IMapper mapper)
+        public readonly SymmetricSecurityKey _key;
+
+        public TokenService(IConfiguration config, UserManager<User> userManager, IMapper mapper)
         {
             _configuration = config;
             _userManager = userManager;
@@ -34,25 +32,26 @@ namespace ProEventos.Application
 
         public async Task<string> CreateToken(UserUpdateDto userUpdateDto)
         {
-            //Mapeando o User com o parametro userUpdateDto.
+            // Mapeia o objeto UserUpdateDto para um objeto User.
             var user = _mapper.Map<User>(userUpdateDto);
 
-            //Claims = afirmações para compor o token.
+            // Lista de afirmações (claims) que compõem o token.
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName)
+        };
 
+            // Obtém as funções (roles) do usuário a partir do UserManager.
             var roles = await _userManager.GetRolesAsync(user);
 
-            //Adicionar dentro de claims baseada no user.Id e no user.UserName junto com
-            //as informaçoes no banco das roles que o meu usuario possui.
+            // Adiciona as roles como claims ao token.
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+            // Define as credenciais de assinatura do token.
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
-            //Montando o Token
+            // Cria a descrição do token.
             var tokenDescription = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -60,8 +59,13 @@ namespace ProEventos.Application
                 SigningCredentials = creds,
             };
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescription);   
+
+            // Cria o token JWT.
+            var token = tokenHandler.CreateToken(tokenDescription);
+
+            // Converte o token em uma string JWT e retorna.
             return tokenHandler.WriteToken(token);
         }
+
     }
 }
