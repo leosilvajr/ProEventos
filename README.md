@@ -1,27 +1,35 @@
-# ProEventos - Curso da Udemy
+# Projeto de API com ASP.NET Core e Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.5.
+## Descrição
 
-## Development server
+Olá! Bem-vindo ao projeto de criação de uma aplicação web utilizando tecnologia API RESTful com o ASP.NET Core 6 e Entity Framework Core 5, juntamente com o framework Angular 11 e 12. Este projeto faz parte do curso ministrado por Vinícius Andrade.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## O projeto contém
 
-## Code scaffolding
+- Introdução ao ASP .NET Core 5
+- Introdução à Angular 11 e 12
+- Implementação de uma RESTful API
+- Características e conceitos essenciais do ASP.NET API MVC
+- Profundidade no Entity Framework Core 5
+- Criação de uma Web API em várias camadas
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Módulos
 
-## Build
+- .NET Core 5
+- EF Core 5 - Introdução
+- Angular - Introdução
+- Angular - Interpolação, Diretivas e Binding
+- .NET 5 - Múltiplas Camadas
+- Angular - Organização, Rota, Alertas e Mais
+- Angular - Reactive Forms e Novo Layout
+- DTOs & Data Annotations
+- Angular - Registrando Evento
+- Angular e .NET - Eventos e Lotes
+- Upload de Imagens
+- ASP.NET Core Identity - Autenticação e Autorização (TOKEN - JWT)
+- Angular + .NET Core Identity + JWT
+- Paginação e Filtros
+- Palestrantes e Redes Sociais - Backend
+- Palestrantes e Redes Sociais - Frontend
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
