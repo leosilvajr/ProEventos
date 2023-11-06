@@ -199,5 +199,6 @@ namespace ProEventos.API.Controllers
                 System.IO.File.Delete(imagePath);
             }
         }
+
     }
 }
