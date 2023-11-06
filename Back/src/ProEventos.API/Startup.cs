@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProEventos.Application;
 using ProEventos.Application.Contratos;
@@ -41,25 +44,36 @@ namespace ProEventos.API
 
             //Service, oque contexto que voce está ultilizando é o meu DbContext que possui o meu Evento
             services.AddDbContext<ProEventosContext>(
-                
+
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
 
-            services.AddIdentityCore<UserPersist>(option =>
+            services.AddIdentityCore<User>(options =>
             {
-                option.Password.RequireDigit = false;
-                option.Password.RequireNonAlphanumeric = false;
-                option.Password.RequireLowercase = false;
-                option.Password.RequireUppercase = false;
-                option.Password.RequiredLength = 4;
-
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
             })
             .AddRoles<Role>()
             .AddRoleManager<RoleManager<Role>>()
             .AddSignInManager<SignInManager<User>>()
-            .AddRoleValidator<RoleValidator<User>>()
+            .AddRoleValidator<RoleValidator<Role>>()
             .AddEntityFrameworkStores<ProEventosContext>()
             .AddDefaultTokenProviders(); //Sem esse AddDefaultTokenProviders algumas funcções do Token do AccountService não funcionará.
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])), //Descriptografando a chave JWT.
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
 
 
@@ -70,21 +84,21 @@ namespace ProEventos.API
                     );
 
             //AutoMapper - Injeção do Objeto
-                    //Dentro do dominio da minha aplicaçao no contexto existem varios Assemblies 
+            //Dentro do dominio da minha aplicaçao no contexto existem varios Assemblies 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //Injeção de Dependencia
             //Toda vez que for requisitado o IEventoService injete o EventoService
-            services.AddScoped<IEventoService,  EventoService>();
-            services.AddScoped<ILoteService,    LoteService>();
-            services.AddScoped<ITokenService,   TokenService>();
+            services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<ILoteService, LoteService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
 
-            services.AddScoped<IGeralPersist,  GeralPersist>();
+            services.AddScoped<IGeralPersist, GeralPersist>();
             services.AddScoped<IEventoPersist, EventoPersist>();
-            services.AddScoped<ILotePersist,   LotePersist>();
+            services.AddScoped<ILotePersist, LotePersist>();
 
-            services.AddScoped<IUserPersist, UserPersist>();          
+            services.AddScoped<IUserPersist, UserPersist>();
 
 
             //Habilitando o CORS
@@ -109,6 +123,7 @@ namespace ProEventos.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             // Dando permissoes aos CORS
@@ -119,7 +134,7 @@ namespace ProEventos.API
             //Resource/Images
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider( Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
                 RequestPath = new PathString("/Resources")
             });
 
