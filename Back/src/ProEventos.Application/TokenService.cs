@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,7 +28,17 @@ namespace ProEventos.Application
             _configuration = config;
             _userManager = userManager;
             _mapper = mapper;
+            //_key = GenerateRandomKey();
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+        }
+
+        //Não usando mais.
+        private SymmetricSecurityKey GenerateRandomKey()
+        {
+            // Gere uma chave aleatória de 512 bits
+            var keyBytes = new byte[64]; // 64 bytes = 512 bits
+            new RNGCryptoServiceProvider().GetBytes(keyBytes);
+            return new SymmetricSecurityKey(keyBytes);
         }
 
         public async Task<string> CreateToken(UserUpdateDto userUpdateDto)
@@ -48,8 +59,12 @@ namespace ProEventos.Application
             // Adiciona as roles como claims ao token.
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+            var a = _key.KeySize;
+
+
             // Define as credenciais de assinatura do token.
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+
 
             // Cria a descrição do token.
             var tokenDescription = new SecurityTokenDescriptor

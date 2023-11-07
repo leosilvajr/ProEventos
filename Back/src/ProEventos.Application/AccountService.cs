@@ -55,7 +55,7 @@ namespace ProEventos.Application
             try
             {
                 //Mapeando o argumento userDto para o User
-                var user = _mapper.Map<User>(userDto);
+                var user =  _mapper.Map<User>(userDto);
 
                                     //_userManger vai criar o meu usario de forma assyncrona usando o user e o meu userDto.Password
                 var result = await _userManager.CreateAsync(user, userDto.Password);
