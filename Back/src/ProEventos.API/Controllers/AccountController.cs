@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.Extensions;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProEventos.API.Controllers
@@ -23,13 +25,16 @@ namespace ProEventos.API.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpGet("GetUser/{userName}")]
-        [AllowAnonymous] //Permitir Anonimos, ou seja, alguem que nao contem o token
-        public async Task<IActionResult> GetUser(string userName)
+        [HttpGet("GetUser")] //Metodo de Extensão:GetUser vai usar O token par apegar nome do usuario e senha
+        //[AllowAnonymous] //Permitir Anonimos, ou seja, alguem que nao contem o token
+        public async Task<IActionResult> GetUser()
         {
             try
             {
                 //Usar Classe de Extensão
+                //User = ClaimsPrincipal
+                var userName = User.GetUserName();
+
                 var user = await _accountService.GetUserByUserNameAsync(userName);
                 return Ok(user);
             }

@@ -64,7 +64,7 @@ namespace ProEventos.API
             .AddDefaultTokenProviders(); //Sem esse AddDefaultTokenProviders algumas funcções do Token do AccountService não funcionará.
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer(options => //Implementaçao do JWT
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
