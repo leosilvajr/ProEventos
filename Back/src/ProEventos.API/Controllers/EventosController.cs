@@ -9,9 +9,11 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
 using ProEventos.API.Extensions;
+using Microsoft.AspNetCore.Authorization;
 //VS
 namespace ProEventos.API.Controllers
 {
+    [Authorize] //Notation que obriga o sistema ter o token pra qualquer requisiçao da controller.
     [ApiController]
     [Route("api/[controller]")]
     public class EventosController : ControllerBase
