@@ -55,7 +55,7 @@ namespace ProEventos.Application
             try
             {
                 //Mapeando o argumento userDto para o User
-                var user = _mapper.Map<User>(userDto);
+                var user =  _mapper.Map<User>(userDto);
 
                                     //_userManger vai criar o meu usario de forma assyncrona usando o user e o meu userDto.Password
                 var result = await _userManager.CreateAsync(user, userDto.Password);
@@ -102,30 +102,32 @@ namespace ProEventos.Application
             try
             {
                 var user = await _userPersist.GetUserByUserNameAsync(userUpdateDto.UserName);
-                if (user == null)
-                {
-                    return null;
-                }
+                if (user == null) return null;
+
+                userUpdateDto.Id = user.Id;
+
                 _mapper.Map(userUpdateDto, user);
 
-                //Vamos Criar/Atualizar o Token
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                //Reset do Password
-                var result = await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
+                if (userUpdateDto.Password != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
+                }
 
                 _userPersist.Update<User>(user);
+
                 if (await _userPersist.SaveChangesAsync())
                 {
                     var userRetorno = await _userPersist.GetUserByUserNameAsync(user.UserName);
+
                     return _mapper.Map<UserUpdateDto>(userRetorno);
                 }
+
                 return null;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-
-                throw new Exception($"Erro ao tentar atualizar Usuário. Erro: {ex.Message}");
+                throw new Exception($"Erro ao tentar atualizar usuário. Erro: {ex.Message}");
             }
         }
 

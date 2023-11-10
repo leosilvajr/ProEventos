@@ -64,7 +64,7 @@ namespace ProEventos.API
             .AddDefaultTokenProviders(); //Sem esse AddDefaultTokenProviders algumas funcções do Token do AccountService não funcionará.
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer(options => //Implementaçao do JWT
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -104,9 +104,41 @@ namespace ProEventos.API
             //Habilitando o CORS
             services.AddCors();
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
+
+
+                //Implementando Token no Swagger
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header usando Bearer.
+                                   Entre com 'Bearer' [Espaço] então coloque seu Token.
+                                    Exemplo: 'Bearer 123456abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
+
             });
         }
 
