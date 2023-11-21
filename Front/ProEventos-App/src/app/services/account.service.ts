@@ -36,6 +36,18 @@ export class AccountService {
     localStorage.setItem('user', JSON.stringify(user)); // Armazena as informações do usuário no armazenamento local
     this.currentUserSource.next(user); // Notifica os assinantes sobre a atualização do usuário
   }
+
+  public register(model: any): Observable<void> {
+    return this.http.post<User>(this.baseUrl + 'register', model).pipe(   
+      take(1), 
+      map((response: User) => {
+        const user = response;
+        if (user) {
+          this.setCurrentUser(user); 
+        }
+      })
+    );
+  }
     
   }
   

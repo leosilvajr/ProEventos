@@ -18,7 +18,7 @@ import { environment } from '@environments/environment';
 
 export class EventoService {
   baseURL = environment.apiURL+'api/eventos';
-  TOKEN = new HttpHeaders({ 'Authorization': 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidW5pcXVlX25hbWUiOiJsZW9uYXJkbyIsIm5iZiI6MTY5OTU4MDI4NywiZXhwIjoxNzAwMTg1MDg3LCJpYXQiOjE2OTk1ODAyODd9.Jf-2GS7benJltUFDgNU1ptjhtIUqWtBSDugQchwEogGcfzZrZ2Zs4bIOUjGFqWmzcAnju_BXe-GS4Ry0PvKIQQ' });
+  TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` });
   constructor(private http: HttpClient) { }
 
 public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array de Eventos
@@ -29,7 +29,7 @@ public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array
 
 public getEventosByTema( tema : string): Observable<Evento[]> {
   return this.http
-  .get<Evento[]>(`${this.baseURL}/${tema}/tema`)
+  .get<Evento[]>(`${this.baseURL}/${tema}/tema`, {headers: this.TOKEN})
   .pipe(take(1));
 }
 
@@ -41,19 +41,19 @@ public getEventoById(id : number): Observable<Evento> {
 
 public post(evento: Evento): Observable<Evento> {
   return this.http
-  .post<Evento>(this.baseURL, evento)
+  .post<Evento>(this.baseURL, evento, {headers: this.TOKEN})
   .pipe(take(1));
 }
 
 public put(evento: Evento): Observable<Evento> {
   return this.http
-  .put<Evento>(`${this.baseURL}/${evento.id}`, evento)
+  .put<Evento>(`${this.baseURL}/${evento.id}`, evento, {headers: this.TOKEN})
   .pipe(take(1)).pipe(take(1));
 }
 
 public deleteEvento(id : number): Observable<any> {
   return this.http
-  .delete(`${this.baseURL}/${id}`)
+  .delete(`${this.baseURL}/${id}`, {headers: this.TOKEN})
   .pipe(take(1));
 }
 
@@ -63,7 +63,7 @@ postUpload(eventoId: number, file: any): Observable<Evento> {
   formData.append('file', fileToUpload);
 
   return this.http
-    .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData)
+    .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData, {headers: this.TOKEN})
     .pipe(take(1));
 }
 
