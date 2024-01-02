@@ -52,7 +52,7 @@ export class RegistrationComponent implements OnInit {
 
   //Implementando Registro de Usuario
   register(): void {
-    this.user = {...this.form.value};
+    this.user = {...this.form.value};//Passando pra user osvalores do form do cadastro
     this.accountService.register(this.user).subscribe(
       () => this.router.navigateByUrl('/dashboard'),
       (error: any) => this.toaster.error(error.erro)

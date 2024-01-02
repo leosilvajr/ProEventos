@@ -13,12 +13,12 @@ import { environment } from '@environments/environment';
 // })
 
 //A outra maneira mais usada é injetando direto no app.madules.ts
-@Injectable() //Injeçao feita no app.madules.ts
+@Injectable() //Injeçao feita no app.modules.ts
 
 
 export class EventoService {
   baseURL = environment.apiURL+'api/eventos';
-  TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` });
+  TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` }); //Converto stirng para json para acessar variavel token
   constructor(private http: HttpClient) { }
 
 public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array de Eventos
