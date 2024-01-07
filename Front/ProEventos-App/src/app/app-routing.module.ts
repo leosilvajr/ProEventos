@@ -15,8 +15,38 @@ import { RegistrationComponent } from './components/user/registration/registrati
 import { PerfilComponent } from './components/user/perfil/perfil.component';
 
 import { ContatosComponent } from './components/contatos/contatos.component';
+import { AuthGuard } from './guard/auth.guard';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full'}, //Se nao informar nada vai para home
+
+  //Criando um agrupamento onde todos os filhos dessa configuração tem que ser autentidado
+  {
+    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'user', redirectTo: 'user/perfil'},
+      { 
+        path: 'user/perfil', component: PerfilComponent
+      },
+    
+      { path: 'eventos' , redirectTo: 'eventos/lista' }, //Redirecionando o Evento para eventos/lista
+      { 
+        path: 'eventos', component: EventosComponent,
+        children: [ //Rotas Filhas
+          { path: 'detalhe/:id', component: EventoDetalheComponent},
+          { path: 'detalhe', component: EventoDetalheComponent},
+          { path: 'lista', component: EventoListaComponent}
+        ]
+      },
+      { path: 'dashboard', component: DashboardComponent},
+      { path: 'palestrantes', component: PalestrantesComponent},
+      { path: 'contatos', component: ContatosComponent}
+    ]
+  },
+
   {
     path : 'user' , component: UserComponent,
     children:[//Rotas Filhas
@@ -24,24 +54,9 @@ const routes: Routes = [
       {path: 'registration' , component: RegistrationComponent},
     ]
   },
-  { 
-    path: 'user/perfil', component: PerfilComponent
-  },
 
-  { path: 'eventos' , redirectTo: 'eventos/lista' }, //Redirecionando o Evento para eventos/lista
-  { 
-    path: 'eventos', component: EventosComponent,
-    children: [ //Rotas Filhas
-      { path: 'detalhe/:id', component: EventoDetalheComponent},
-      { path: 'detalhe', component: EventoDetalheComponent},
-      { path: 'lista', component: EventoListaComponent}
-    ]
-  },
-  { path: 'dashboard', component: DashboardComponent},
-  { path: 'palestrantes', component: PalestrantesComponent},
-  { path: 'contatos', component: ContatosComponent},
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full'}, //Se nao informar nada vai para dashboard
-  { path: '**', redirectTo: 'dashboard', pathMatch: 'full'}, //Se  informar qualquer coisa vai para dashboard
+  { path: 'home', component: HomeComponent},
+  { path: '**', redirectTo: 'home', pathMatch: 'full'}, //Se nao informar nada vai para dashboard
 
 
 ];
