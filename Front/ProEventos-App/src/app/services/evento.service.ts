@@ -18,6 +18,8 @@ import { environment } from '@environments/environment';
 
 export class EventoService {
   baseURL = environment.apiURL+'api/eventos';
+
+  //Para adicionar o Interceptor, tem que remover a variavel TOKEN dos argumentos de cada metodo.
   TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` }); 
   //, {headers: this.TOKEN}
   constructor(private http: HttpClient) { }
@@ -30,31 +32,31 @@ public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array
 
 public getEventosByTema( tema : string): Observable<Evento[]> {
   return this.http
-  .get<Evento[]>(`${this.baseURL}/${tema}/tema`)
+  .get<Evento[]>(`${this.baseURL}/${tema}/tema`, {headers: this.TOKEN})
   .pipe(take(1));
 }
 
 public getEventoById(id : number): Observable<Evento> {
   return this.http
-  .get<Evento>(`${this.baseURL}/${id}`)
+  .get<Evento>(`${this.baseURL}/${id}`, {headers: this.TOKEN})
   .pipe(take(1));
 }  
 
 public post(evento: Evento): Observable<Evento> {
   return this.http
-  .post<Evento>(this.baseURL, evento)
+  .post<Evento>(this.baseURL, evento, {headers: this.TOKEN})
   .pipe(take(1));
 }
 
 public put(evento: Evento): Observable<Evento> {
   return this.http
-  .put<Evento>(`${this.baseURL}/${evento.id}`, evento)
+  .put<Evento>(`${this.baseURL}/${evento.id}`, evento, {headers: this.TOKEN})
   .pipe(take(1)).pipe(take(1));
 }
 
 public deleteEvento(id : number): Observable<any> {
   return this.http
-  .delete(`${this.baseURL}/${id}`)
+  .delete(`${this.baseURL}/${id}`, {headers: this.TOKEN})
   .pipe(take(1));
 }
 
@@ -64,7 +66,7 @@ postUpload(eventoId: number, file: any): Observable<Evento> {
   formData.append('file', fileToUpload);
 
   return this.http
-    .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData)
+  .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData, {headers: this.TOKEN})
     .pipe(take(1));
 }
 
