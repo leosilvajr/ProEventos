@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '@app/models/identity/User';
+import { UserUpdate } from '@app/models/identity/UserUpdate';
 import { environment } from '@environments/environment';
 import { Observable, ReplaySubject, map, take } from 'rxjs';
 
@@ -25,6 +26,21 @@ export class AccountService {
       })
     );
   }
+
+  getUser(): Observable<UserUpdate> {
+    return this.http.get<UserUpdate>(this.baseUrl + 'getUser').pipe(take(1));
+  }
+
+  updateUser(model: UserUpdate): Observable<void> {
+    return this.http.put<UserUpdate>(this.baseUrl + 'updateUser', model).pipe(
+      take(1),
+      map((user: UserUpdate) => {
+          this.setCurrentUser(user);
+        }
+      )
+    )
+  }
+
   logout(): void {
     localStorage.removeItem('user'); // Remove informações do usuário do armazenamento local
     this.currentUserSource.next(null); // Notifica os assinantes que o usuário foi removido

@@ -20,43 +20,43 @@ export class EventoService {
   baseURL = environment.apiURL+'api/eventos';
 
   //Para adicionar o Interceptor, tem que remover a variavel TOKEN dos argumentos de cada metodo.
-  TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` }); 
+  //TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` }); 
   //, {headers: this.TOKEN}
   constructor(private http: HttpClient) { }
 
 public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array de Eventos
   return this.http
-  .get<Evento[]>(this.baseURL, {headers: this.TOKEN}) //Remover apos resolver o problema do Interceptor CORS
+  .get<Evento[]>(this.baseURL) //Remover apos resolver o problema do Interceptor CORS
   .pipe(take(1));
 }
 
 public getEventosByTema( tema : string): Observable<Evento[]> {
   return this.http
-  .get<Evento[]>(`${this.baseURL}/${tema}/tema`, {headers: this.TOKEN})
+  .get<Evento[]>(`${this.baseURL}/${tema}/tema`)
   .pipe(take(1));
 }
 
 public getEventoById(id : number): Observable<Evento> {
   return this.http
-  .get<Evento>(`${this.baseURL}/${id}`, {headers: this.TOKEN})
+  .get<Evento>(`${this.baseURL}/${id}`)
   .pipe(take(1));
 }  
 
 public post(evento: Evento): Observable<Evento> {
   return this.http
-  .post<Evento>(this.baseURL, evento, {headers: this.TOKEN})
+  .post<Evento>(this.baseURL, evento)
   .pipe(take(1));
 }
 
 public put(evento: Evento): Observable<Evento> {
   return this.http
-  .put<Evento>(`${this.baseURL}/${evento.id}`, evento, {headers: this.TOKEN})
+  .put<Evento>(`${this.baseURL}/${evento.id}`, evento)
   .pipe(take(1)).pipe(take(1));
 }
 
 public deleteEvento(id : number): Observable<any> {
   return this.http
-  .delete(`${this.baseURL}/${id}`, {headers: this.TOKEN})
+  .delete(`${this.baseURL}/${id}`)
   .pipe(take(1));
 }
 
@@ -66,7 +66,7 @@ postUpload(eventoId: number, file: any): Observable<Evento> {
   formData.append('file', fileToUpload);
 
   return this.http
-  .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData, {headers: this.TOKEN})
+  .post<Evento>(`${this.baseURL}/upload-image/${eventoId}`, formData)
     .pipe(take(1));
 }
 
