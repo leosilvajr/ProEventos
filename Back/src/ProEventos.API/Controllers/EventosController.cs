@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Linq;
 using ProEventos.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using ProEventos.Persistence.Models;
 //VS
 namespace ProEventos.API.Controllers
 {
@@ -31,13 +32,13 @@ namespace ProEventos.API.Controllers
             _hostEnvironment = hostEnvironment;
             _accountService = accountService;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Get() //Não posso receber meu userId aqui pra nao quebrar protocolo, tenho que pegar pelo token
+            
+        [HttpGet]                       //[FromQuery] => Todos os itens do meu pageParams serao passados via query
+        public async Task<IActionResult> Get([FromQuery]PageParams pageParams) //Não posso receber meu userId aqui pra nao quebrar protocolo, tenho que pegar pelo token
         {
             try
             {                                              //Classe Extension que pega id de quem ta logado.
-                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(), true); //Pego todos os meus eventos e atribui pra variavel eventos
+                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(),pageParams, true); //Pego todos os meus eventos e atribui pra variavel eventos
                 if (eventos == null) return NoContent();
 
                 return Ok(eventos);
@@ -66,22 +67,22 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpGet("{tema}/tema")]
-        public async Task<IActionResult> GetByTema(string tema)
-        {
-            try
-            {
-                var evento = await _eventoService.GetAllEventosByTemaAsync(User.GetUserId(), tema, true);
-                if (evento == null) NoContent();
+        //[HttpGet("{tema}/tema")]
+        //public async Task<IActionResult> GetByTema(string tema)
+        //{
+        //    try
+        //    {
+        //        var evento = await _eventoService.GetAllEventosByTemaAsync(User.GetUserId(), tema, true);
+        //        if (evento == null) NoContent();
 
-                return Ok(evento);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
-            }
-        }
+        //        return Ok(evento);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return this.StatusCode(StatusCodes.Status500InternalServerError,
+        //            $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+        //    }
+        //}
 
 
         [HttpPost("upload-image/{eventoId}")]
