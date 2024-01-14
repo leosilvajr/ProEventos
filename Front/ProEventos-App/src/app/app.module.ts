@@ -7,6 +7,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse'; //Importante Efeito Col
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'; //Componente Data
@@ -68,6 +70,7 @@ defineLocale('pt-br', ptBrLocale);
     HttpClientModule, //Possibilidade de usar no component a referencia
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
+    PaginationModule.forRoot(),
     CollapseModule.forRoot(), //Usando o Collapse Importado
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),

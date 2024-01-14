@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from 'rxjs'; //Observable
+import { Observable, map, take } from 'rxjs'; //Observable
 import { Evento } from '../models/Evento';
 import { Constants } from '@app/util/constants';
 import { environment } from '@environments/environment';
+import { PaginatedResult } from '@app/models/Pagination';
 
 
 //Injeção de Dependencia do Angular: Exitem 3 maneiras
@@ -18,23 +19,52 @@ import { environment } from '@environments/environment';
 
 export class EventoService {
   baseURL = environment.apiURL+'api/eventos';
+  constructor(private http: HttpClient) { }
 
   //Para adicionar o Interceptor, tem que remover a variavel TOKEN dos argumentos de cada metodo.
   //TOKEN = new HttpHeaders({ 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user')).token}` }); 
   //, {headers: this.TOKEN}
-  constructor(private http: HttpClient) { }
 
+  /*Antes de Paginar
 public getEventos(): Observable<Evento[]> { //Retorna um Observable com um array de Eventos
   return this.http
   .get<Evento[]>(this.baseURL) //Remover apos resolver o problema do Interceptor CORS
   .pipe(take(1));
+}*/
+
+///Toda vez que eu chamar um evento eu tenho que informar qual a pagina dele, a pagina atual e quantos itens por pagina 
+public getEventos(page?: number, itemsPerPage?: number, term?: string): Observable<PaginatedResult<Evento[]>> {
+  const paginatedResult: PaginatedResult<Evento[]> = new PaginatedResult<Evento[]>();
+
+  let params = new HttpParams;
+
+  if (page != null && itemsPerPage != null) {
+    params = params.append('pageNumber', page.toString());
+    params = params.append('pageSize', itemsPerPage.toString());
+  }
+
+  if (term != null && term != ''){
+    params = params.append('term', term);
+  }
+
+  return this.http
+    .get<Evento[]>(this.baseURL, {observe: 'response', params })
+    .pipe(
+      take(1),
+      map((response) => {
+        paginatedResult.result = response.body;
+        if(response.headers.has('Pagination')) {
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return paginatedResult;
+      }));
 }
 
-public getEventosByTema( tema : string): Observable<Evento[]> {
-  return this.http
-  .get<Evento[]>(`${this.baseURL}/${tema}/tema`)
-  .pipe(take(1));
-}
+// public getEventosByTema( tema : string): Observable<Evento[]> {
+//   return this.http
+//   .get<Evento[]>(`${this.baseURL}/${tema}/tema`)
+//   .pipe(take(1));
+// }
 
 public getEventoById(id : number): Observable<Evento> {
   return this.http
