@@ -7,14 +7,10 @@ using System.Threading.Tasks;
 
 namespace ProEventos.Application.Dtos
 {
-    public class PalestranteDto
+    public class PalestranteUpdateDto
     {
         public int Id { get; set; }
         public string MiniCurriculo { get; set; }
         public int UserId { get; set; }
-
-        public UserUpdateDto User { get; set; }
-        public IEnumerable<RedeSocial> RedesSociais { get; set; }
-        public IEnumerable<EventoDto> Eventos { get; set; }
     }
 }

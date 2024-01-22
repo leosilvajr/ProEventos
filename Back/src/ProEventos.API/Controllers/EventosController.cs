@@ -11,6 +11,7 @@ using System.Linq;
 using ProEventos.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using ProEventos.Persistence.Models;
+using ProEventos.API.Helpers;
 //VS
 namespace ProEventos.API.Controllers
 {
@@ -20,16 +21,17 @@ namespace ProEventos.API.Controllers
     public class EventosController : ControllerBase
     {
         private readonly IEventoService _eventoService;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IUtil _util;
         private readonly IAccountService _accountService;
+        private readonly string _destino = "Images";
 
         public EventosController(
             IEventoService eventoService,
-            IWebHostEnvironment hostEnvironment,
+            IUtil util,
             IAccountService accountService)
         {
             _eventoService = eventoService;
-            _hostEnvironment = hostEnvironment;
+            _util = util;
             _accountService = accountService;
         }
             
@@ -102,10 +104,10 @@ namespace ProEventos.API.Controllers
                 if (file.Length > 0)
                 {
                     //Deletar Imagem
-                    DeleteImage(evento.ImagemURL);
+                    _util.DeleteImage(evento.ImagemURL, _destino);
 
                     //Salvar Imagem
-                    evento.ImagemURL = await SaveImage(file);
+                    evento.ImagemURL = await _util.SaveImage(file, _destino);
 
                 }
 
@@ -115,7 +117,7 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar realizar upload de foto do evento. Erro: {ex.Message}");
             }
         }
 
@@ -163,7 +165,7 @@ namespace ProEventos.API.Controllers
 
                 if (await _eventoService.DeleteEvento(User.GetUserId(), id))
                 {
-                    DeleteImage(evento.ImagemURL);
+                    _util.DeleteImage(evento.ImagemURL, _destino);
                     return Ok(new { message = "Deletado" });
                 }
                 else
@@ -178,7 +180,7 @@ namespace ProEventos.API.Controllers
                     $"Erro ao tentar deletar eventos. Erro: {ex.Message}");
             }
         }
-
+        /*
         [NonAction] //Nao sera um EndPoint
         public async Task<string> SaveImage(IFormFile imageFile)
         {
@@ -208,6 +210,6 @@ namespace ProEventos.API.Controllers
                 System.IO.File.Delete(imagePath);
             }
         }
-
+        */
     }
 }
