@@ -40,12 +40,17 @@ namespace ProEventos.API.Helpers
         }
 
         public void DeleteImage(string imageName, string destino)
-        {                                   //Raiz Atual do meu caminho
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/{destino}", imageName);
-            if (System.IO.File.Exists(imagePath))
+        {
+            //Raiz Atual do meu caminho
+            if (!string.IsNullOrEmpty(imageName))
             {
-                System.IO.File.Delete(imagePath);
+                var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/{destino}", imageName);
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
             }
+
         }
     }
 }
