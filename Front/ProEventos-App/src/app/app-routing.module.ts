@@ -19,7 +19,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full'}, //Se nao informar nada vai para home
+  { path: '', redirectTo: 'user/perfil', pathMatch: 'full'}, //Se nao informar nada vai para home
 
   //Criando um agrupamento onde todos os filhos dessa configuração tem que ser autentidado
   {

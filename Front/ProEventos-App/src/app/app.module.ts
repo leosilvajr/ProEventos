@@ -8,6 +8,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
@@ -25,6 +26,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { PalestrantesComponent } from './components/palestrantes/palestrantes.component';
 import { PerfilComponent } from './components/user/perfil/perfil.component';
+import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NavComponent } from './shared/nav/nav.component';
 import { TituloComponent } from './shared/titulo/titulo.component';
@@ -52,6 +54,7 @@ defineLocale('pt-br', ptBrLocale);
     ContatosComponent,
     DashboardComponent,
     PerfilComponent,
+    PerfilDetalheComponent,
     NavComponent,
     TituloComponent,
     DateTimeFormatPipe,
@@ -71,6 +74,7 @@ defineLocale('pt-br', ptBrLocale);
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
     PaginationModule.forRoot(),
+    TabsModule.forRoot(),
     CollapseModule.forRoot(), //Usando o Collapse Importado
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
