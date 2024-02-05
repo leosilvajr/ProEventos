@@ -108,6 +108,7 @@ namespace ProEventos.Application
 
                 _mapper.Map(userUpdateDto, user);
 
+
                 if (userUpdateDto.Password != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
