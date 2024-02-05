@@ -5,6 +5,7 @@ import { PaginatedResult, Pagination } from '@app/models/Pagination';
 import { Palestrante } from '@app/models/Palestrante';
 import { EventoService } from '@app/services/evento.service';
 import { PalestranteService } from '@app/services/palestrante.service';
+import { environment } from '@environments/environment';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -71,6 +72,15 @@ export class PalestranteListaComponent implements OnInit {
     }
     this.termoBuscaChanged.next(evt.value);       
 
+  }
+
+  public getImagemURL(imagemName: string): string {
+    if (imagemName) {
+      return `${environment.apiURL}resources/perfil/${imagemName}`;
+    }
+    else{
+      return `./assets/img/perfil.png`;
+    }
   }
 
   carregarPalestrantes(): void {

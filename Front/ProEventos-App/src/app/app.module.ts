@@ -26,6 +26,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { PalestrantesComponent } from './components/palestrantes/palestrantes.component';
 import { PalestranteListaComponent } from './components/palestrantes/palestrante-lista/palestrante-lista.component';
+import { PalestranteDetalheComponent } from './components/palestrantes/palestrante-detalhe/palestrante-detalhe.component';
 import { PerfilComponent } from './components/user/perfil/perfil.component';
 import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -53,6 +54,7 @@ defineLocale('pt-br', ptBrLocale);
     EventosComponent,
     PalestrantesComponent,
     PalestranteListaComponent,
+    PalestranteDetalheComponent,
     ContatosComponent,
     DashboardComponent,
     PerfilComponent,

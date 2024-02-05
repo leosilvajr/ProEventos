@@ -40,25 +40,6 @@ namespace ProEventos.Persistence
             return await PageList<Palestrante>.CreateAsync(query, pageParams.PageNumber, pageParams.PageSize);  
         }
 
-
-        /* public async Task<Palestrante[]> GetAllPalestrantesByNomeAsync(string nome, bool includeEventos)
-        {
-            IQueryable<Palestrante> query = _context.Palestrantes
-                .Include(p => p.RedesSociais);
-
-            if (includeEventos)
-            {
-                query = query
-                    .Include(p => p.PalestrantesEventos)
-                    .ThenInclude(pe => pe.Evento);
-            }
-
-            query = query.AsNoTracking().OrderBy(p => p.Id)
-                         .Where(p => p.User.PrimeiroNome.ToLower().Contains(nome.ToLower()));
-
-            return await query.ToArrayAsync();
-        }*/
-
         public async Task<Palestrante> GetPalestranteByUserIdAsync(int userId, bool includeEventos)
         {
             IQueryable<Palestrante> query = _context.Palestrantes
