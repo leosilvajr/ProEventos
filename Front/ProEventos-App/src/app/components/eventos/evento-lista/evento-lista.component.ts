@@ -77,7 +77,7 @@ export class EventoListaComponent implements OnInit {
   public ngOnInit(): void {
     this.pagination = {
       currentPage: 1,
-      itemsPerPage: 3,
+      itemsPerPage: 5,
       totalItems: 1,
       totalPages: 1
     } as Pagination;
