@@ -104,8 +104,7 @@ export class PerfilDetalheComponent implements OnInit {
           this.toaster.error('Função Palestrante não pode ser ativada.', 'Error');
           console.error(error);
         }
-        );
-      
+      );     
     }
 
     this.accountService
