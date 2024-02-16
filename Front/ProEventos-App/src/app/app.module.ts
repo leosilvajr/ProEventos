@@ -29,6 +29,7 @@ import { PalestranteListaComponent } from './components/palestrantes/palestrante
 import { PalestranteDetalheComponent } from './components/palestrantes/palestrante-detalhe/palestrante-detalhe.component';
 import { PerfilComponent } from './components/user/perfil/perfil.component';
 import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
+import { RedesSociaisComponent } from './components/redesSociais/redesSociais.component';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NavComponent } from './shared/nav/nav.component';
 import { TituloComponent } from './shared/titulo/titulo.component';
@@ -59,6 +60,7 @@ defineLocale('pt-br', ptBrLocale);
     DashboardComponent,
     PerfilComponent,
     PerfilDetalheComponent,
+    RedesSociaisComponent,
     NavComponent,
     TituloComponent,
     DateTimeFormatPipe,
